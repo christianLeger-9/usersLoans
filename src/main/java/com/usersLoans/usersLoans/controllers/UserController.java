@@ -1,5 +1,6 @@
 package com.usersLoans.usersLoans.controllers;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +13,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.usersLoans.usersLoans.data.Loans;
 import com.usersLoans.usersLoans.data.Users;
+import com.usersLoans.usersLoans.repository.LoanRepository;
 import com.usersLoans.usersLoans.service.UserService;
 
 @RestController
-@RequestMapping(path="/users")
+@RequestMapping("/users")
 public class UserController {
 
 	@Autowired
 	UserService userService;
 	
-	@RequestMapping(value="/users/{id}", method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE})
+	@Autowired
+	LoanRepository loanRepository;
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE})
 	//Devuelve el usuario enviado por parametro
 	public ResponseEntity<?> users(@PathVariable Long id){
 		Optional<Users> user = null;
+		ArrayList<Loans> loans = null;
 		try {
 			user = userService.findById(id);
+			loans = (ArrayList<Loans>) loanRepository.findByIdUser(user.get().getId());
+			user.get().setLoans(loans);
 		}
 		catch( Exception e) { 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((e.getMessage()));
@@ -35,26 +44,35 @@ public class UserController {
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 	
-	
-	@RequestMapping(value="/saveUser", method=RequestMethod.POST)
+	@RequestMapping(value="/", method=RequestMethod.POST)
 	//agrega un nuevo usuario cargado previamente
 	public ResponseEntity<?> saveUser(@RequestBody Users user){
 		Users userDto = new Users();
+		boolean ok = false;
 		try {
 			userDto = userService.saveUser(user);
+//			if(userDto != null) {
+//				ok = true;
+//			} else {
+//				throw new Exception("Error al guardar un nuevo usuario");
+//			}
 		} catch( Exception e) { 
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((e.getMessage()));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((e.getMessage()));
 		}
-		return new ResponseEntity<>(userDto, HttpStatus.OK);
+		return new ResponseEntity<>(userDto, HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value="/deleteUser/{id}", method=RequestMethod.DELETE)
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<?> deleteUser(@PathVariable Long id){
+		boolean ok = false ;
 		try {
-			userService.deleteUser(id);
+			ok = userService.deleteUser(id);
+			if(!ok) {
+				throw new Exception("Error al eliminar un usuario");
+			}
 		} catch( Exception e) { 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((e.getMessage()));
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(ok,HttpStatus.OK);
 	}
 }

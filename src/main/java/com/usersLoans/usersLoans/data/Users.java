@@ -27,7 +27,6 @@ public class Users implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@JsonIgnore
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
@@ -44,6 +43,5 @@ public class Users implements Serializable {
 	private String lastName;
 	
 //	@OneToMany(mappedBy="idUser" , cascade=CascadeType.ALL , fetch=FetchType.LAZY)
-	@JsonIgnore
 	private ArrayList<Loans> loans;
 }

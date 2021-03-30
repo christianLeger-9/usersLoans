@@ -9,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -27,7 +25,6 @@ public class Loans implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@JsonIgnore
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	

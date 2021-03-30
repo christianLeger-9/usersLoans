@@ -1,0 +1,42 @@
+server:
+  port: 8080
+  servlet.context-path: /users
+
+spring:
+  profiles.active: dev
+  application.name: UsersLoansApp
+  
+---
+#DEV CONFIGURATION
+spring:
+  profiles: dev
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver: spring-web
+    username: sa
+  h2:
+    console:
+      enabled: true
+      path: /h2console
+
+---        
+#PROD CONFIGURATION
+spring:
+  profiles: qa
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver: org.h2.Driver
+    username: sa
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false

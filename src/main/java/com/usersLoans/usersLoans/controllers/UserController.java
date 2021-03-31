@@ -33,13 +33,23 @@ public class UserController {
 	public ResponseEntity<?> users(@PathVariable Long id){
 		Optional<Users> user = null;
 		ArrayList<Loans> loans = null;
+		boolean ok = true;
 		try {
 			user = userService.findById(id);
-			loans = (ArrayList<Loans>) loanRepository.findByIdUser(user.get().getId());
-			user.get().setLoans(loans);
+			if (user.isPresent()) {
+				loans = (ArrayList<Loans>) loanRepository.findByIdUser(user.get().getId());
+				user.get().setLoans(loans);
+			} else {
+				ok = false;
+				throw new Exception("Usuario inexistente");
+			}
 		}
 		catch( Exception e) { 
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((e.getMessage()));
+			if (!ok) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body((e.getMessage()));
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((e.getMessage()));
+			}
 		 }
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
@@ -48,18 +58,12 @@ public class UserController {
 	//agrega un nuevo usuario cargado previamente
 	public ResponseEntity<?> saveUser(@RequestBody Users user){
 		Users userDto = new Users();
-		boolean ok = false;
 		try {
 			userDto = userService.saveUser(user);
-//			if(userDto != null) {
-//				ok = true;
-//			} else {
-//				throw new Exception("Error al guardar un nuevo usuario");
-//			}
 		} catch( Exception e) { 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((e.getMessage()));
 		}
-		return new ResponseEntity<>(userDto, HttpStatus.CREATED);
+		return new ResponseEntity<>(userDto, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)

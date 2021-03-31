@@ -40,3 +40,7 @@ Aclaraciones:
 Al momento de realizar el metodo saveUser, deben enviar el json con el loans vacios(corchetes vacios).
 Luego dar de alta loans para el usuario creado anteriormente, y luego correr el get de usuario por id.
 
+En cada uno de los test, hay dos respuestas, cuando el resultado es ok(codigo 200) o cuando hay algun problema.
+
+
+

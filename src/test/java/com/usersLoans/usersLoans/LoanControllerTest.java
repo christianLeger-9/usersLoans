@@ -14,59 +14,58 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.usersLoans.usersLoans.controllers.LoanController;
 import com.usersLoans.usersLoans.controllers.UserController;
+import com.usersLoans.usersLoans.data.Loans;
 import com.usersLoans.usersLoans.data.Users;
+import com.usersLoans.usersLoans.service.LoanService;
 import com.usersLoans.usersLoans.service.UserService;
 
 @SpringBootTest
-public class UserControllerTests {
-	
+public class LoanControllerTest {
+
 	@InjectMocks
-	private UserController userController;
+	private LoanController loanController;
 	
 	@Mock
-	private UserService userService;
+	private LoanService loanService;
 	
 	@Test
 	void contextLoads() {
 	}
 	
 	@Test
-	void testSaveUser() throws Exception {
+	void getLoansWithOutUserTest() throws Exception {
 		
 		MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-		Users u = new Users();
-		u.setEmail("a@a.com");
-		u.setFirstName("leger");
-		u.setLastName("christian");
-		u.setLoans(new ArrayList<>());
-		ResponseEntity<Users> responseEntity = (ResponseEntity<Users>) userController.saveUser(u);
-		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.OK.value());
-//		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.BAD_REQUEST.value());
-	}
-	
-	@Test
-	void testDeleteUser() throws Exception {
-		
-		MockHttpServletRequest request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-		Users u = new Users();
-		u.setId(new Long(2));
-		ResponseEntity<Object> responseEntity = (ResponseEntity<Object>) userController.deleteUser(u.getId());
+		ResponseEntity<Users> responseEntity = (ResponseEntity<Users>) loanController.getLoansWithOutUser(null,new Long(1),new Long(1));
 //		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.OK.value());
 		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.INTERNAL_SERVER_ERROR.value());
 	}
 	
 	@Test
-	void testFindUser() throws Exception {
+	void getLoansWithUserTest() throws Exception {
 		
 		MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-		Users u = new Users();
-		u.setId(new Long(2));
-		ResponseEntity<Object> responseEntity = (ResponseEntity<Object>) userController.users(u.getId());
+		ResponseEntity<Object> responseEntity = (ResponseEntity<Object>) loanController.getLoansWithUser(new Long(1),new Long(1),new Long(1));
 //		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.OK.value());
-		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.NOT_FOUND.value());
+		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.INTERNAL_SERVER_ERROR.value());
+	}
+	
+	@Test
+	void saveLoansTest() throws Exception {
+		
+		MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+		Loans l = new Loans();
+		l.setIdUser(new Long(1));
+		l.setPage(new Long(1));
+		l.setSize(new Long(1));
+		l.setTotal(100.0);
+		ResponseEntity<Users> responseEntity = (ResponseEntity<Users>) loanController.saveLoans(l);
+//		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.OK.value());
+		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.BAD_REQUEST.value());
 	}
 }

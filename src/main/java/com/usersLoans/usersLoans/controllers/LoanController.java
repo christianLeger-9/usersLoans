@@ -1,5 +1,6 @@
 package com.usersLoans.usersLoans.controllers;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class LoanController {
 		Iterable<Loans> loans = null;
 		try {
 			loans = loanService.getLoansWithOutUser(idUser,page,size);
+			Iterator<Loans> ite = loans.iterator();
+			if(!ite.hasNext()) {
+				throw new Exception("Error al buscar loans con usuario opcional");
+			}
 		}
 		catch( Exception e) { 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((e.getMessage()));
@@ -41,6 +46,10 @@ public class LoanController {
 		Iterable<Loans> loans = null;
 		try {
 			loans = loanService.getLoansWithUser(idUser,page,size);
+			Iterator<Loans> ite = loans.iterator();
+			if(!ite.hasNext()) {
+				throw new Exception("Error al buscar loans con usuario obligatorio");
+			}
 		}
 		catch( Exception e) { 
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((e.getMessage()));
@@ -48,7 +57,7 @@ public class LoanController {
 		return new ResponseEntity<>(loans, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value="/saveLoans", method=RequestMethod.POST)
+	@RequestMapping(value="/", method=RequestMethod.POST)
 	public ResponseEntity<?> saveLoans(@RequestBody Loans loans){
 		Loans loanss = null;
 		try {
@@ -58,7 +67,7 @@ public class LoanController {
 			}
 		}
 		catch( Exception e) { 
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body((e.getMessage()));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((e.getMessage()));
 		 }
 		return new ResponseEntity<>(loans, HttpStatus.OK);
 	}

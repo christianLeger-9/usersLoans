@@ -61,7 +61,7 @@ public class UserController {
 		try {
 			userDto = userService.saveUser(user);
 		} catch( Exception e) { 
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((e.getMessage()));
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((e.getMessage()));
 		}
 		return new ResponseEntity<>(userDto, HttpStatus.OK);
 	}

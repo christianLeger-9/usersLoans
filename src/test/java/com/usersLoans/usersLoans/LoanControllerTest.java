@@ -2,8 +2,6 @@ package com.usersLoans.usersLoans;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,11 +13,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.usersLoans.usersLoans.controllers.LoanController;
-import com.usersLoans.usersLoans.controllers.UserController;
 import com.usersLoans.usersLoans.data.Loans;
 import com.usersLoans.usersLoans.data.Users;
 import com.usersLoans.usersLoans.service.LoanService;
-import com.usersLoans.usersLoans.service.UserService;
 
 @SpringBootTest
 public class LoanControllerTest {

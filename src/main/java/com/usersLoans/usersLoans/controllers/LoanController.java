@@ -31,14 +31,16 @@ public class LoanController {
 	LogService logService;
 	
 	@RequestMapping(value="/getLoansWithOutUser", method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> getLoansWithOutUser(HttpServletRequest request, @RequestParam(required=false,value="idUser") Long idUser, @RequestParam(required=true,value="page") Long page, @RequestParam(required=true,value="size") Long size){
+	public ResponseEntity<?> getLoansWithOutUser(HttpServletRequest request, @RequestParam(required=false,value="idUser") Long idUser, 
+			@RequestParam(required=true,value="page") Long page, @RequestParam(required=true,value="size") Long size){
 		Iterable<Loans> loans = null;
 		String ip = (request.getHeader("X-FORWARDED-FOR") == null) ? request.getRemoteAddr() : request.getHeader("X-FORWARDED-FOR");
 		try {
 			loans = loanService.getLoansWithOutUser(idUser,page,size);
 			Iterator<Loans> ite = loans.iterator();
 			if(!ite.hasNext()) {
-				logService.saveLog(idUser, ip, new Date(), Constants.LOG_ACCION_ERROR,  Constants.LOG_SUBSISTEMA, String.format("Error al buscar loans con usuario opcional"), request.getLocalName());
+				logService.saveLog(idUser, ip, new Date(), Constants.LOG_ACCION_ERROR,  Constants.LOG_SUBSISTEMA, 
+						String.format("Error al buscar loans con usuario opcional"), request.getLocalName());
 				throw new Exception("Error al buscar loans con usuario opcional");
 			}
 		}
@@ -49,14 +51,16 @@ public class LoanController {
 	}
 	
 	@RequestMapping(value="/getLoansWithUser", method=RequestMethod.GET, produces={MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<?> getLoansWithUser(HttpServletRequest request, @RequestParam(required=true,value="idUser") Long idUser, @RequestParam(required=true,value="page") Long page, @RequestParam(required=true,value="size") Long size){
+	public ResponseEntity<?> getLoansWithUser(HttpServletRequest request, @RequestParam(required=true,value="idUser") Long idUser, 
+			@RequestParam(required=true,value="page") Long page, @RequestParam(required=true,value="size") Long size){
 		Iterable<Loans> loans = null;
 		String ip = (request.getHeader("X-FORWARDED-FOR") == null) ? request.getRemoteAddr() : request.getHeader("X-FORWARDED-FOR");
 		try {
 			loans = loanService.getLoansWithUser(idUser,page,size);
 			Iterator<Loans> ite = loans.iterator();
 			if(!ite.hasNext()) {
-				logService.saveLog(idUser, ip, new Date(), Constants.LOG_ACCION_ERROR,  Constants.LOG_SUBSISTEMA, String.format("Error al buscar loans con usuario obligatorio"), request.getLocalName());
+				logService.saveLog(idUser, ip, new Date(), Constants.LOG_ACCION_ERROR,  Constants.LOG_SUBSISTEMA, 
+						String.format("Error al buscar loans con usuario obligatorio"), request.getLocalName());
 				throw new Exception("Error al buscar loans con usuario obligatorio");
 			}
 		}
@@ -73,7 +77,8 @@ public class LoanController {
 		try {
 			loanss = loanService.saveLoans(loans);
 			if (loanss == null ) {
-				logService.saveLog(null, ip, new Date(), Constants.LOG_ACCION_ERROR,  Constants.LOG_SUBSISTEMA, String.format("El idUser no existe para poder agregarle loans"), request.getLocalName());
+				logService.saveLog(null, ip, new Date(), Constants.LOG_ACCION_ERROR,  Constants.LOG_SUBSISTEMA, 
+						String.format("El idUser no existe para poder agregarle loans"), request.getLocalName());
 				throw new Exception("El idUser no existe para poder agregarle loans");
 			}
 		}

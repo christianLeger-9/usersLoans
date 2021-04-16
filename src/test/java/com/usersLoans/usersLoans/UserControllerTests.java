@@ -41,7 +41,7 @@ public class UserControllerTests {
 		u.setFirstName("leger");
 		u.setLastName("christian");
 		u.setLoans(new ArrayList<>());
-		ResponseEntity<Users> responseEntity = (ResponseEntity<Users>) userController.saveUser(u);
+		ResponseEntity<Users> responseEntity = (ResponseEntity<Users>) userController.saveUser(u, null);
 		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.OK.value());
 //		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.BAD_REQUEST.value());
 	}
@@ -53,7 +53,7 @@ public class UserControllerTests {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 		Users u = new Users();
 		u.setId(new Long(2));
-		ResponseEntity<Object> responseEntity = (ResponseEntity<Object>) userController.deleteUser(u.getId());
+		ResponseEntity<Object> responseEntity = (ResponseEntity<Object>) userController.deleteUser(u.getId(), null);
 //		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.OK.value());
 		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.INTERNAL_SERVER_ERROR.value());
 	}
@@ -65,7 +65,7 @@ public class UserControllerTests {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 		Users u = new Users();
 		u.setId(new Long(2));
-		ResponseEntity<Object> responseEntity = (ResponseEntity<Object>) userController.users(u.getId());
+		ResponseEntity<Object> responseEntity = (ResponseEntity<Object>) userController.users(u.getId(), null);
 //		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.OK.value());
 		assertTrue(responseEntity.getStatusCodeValue() == HttpStatus.NOT_FOUND.value());
 	}

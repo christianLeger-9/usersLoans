@@ -66,7 +66,7 @@ public class UserController {
 	
 	@RequestMapping(value="/", method=RequestMethod.POST)
 	//agrega un nuevo usuario cargado previamente
-	public ResponseEntity<?> saveUser(@RequestBody Users user, HttpServletRequest request){
+	public ResponseEntity<?> saveUser(@RequestBody Users user, HttpServletRequest request) {
 		Users userDto = new Users();
 		String ip = (request.getHeader("X-FORWARDED-FOR") == null) ? request.getRemoteAddr() : request.getHeader("X-FORWARDED-FOR");
 		try {
